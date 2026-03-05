@@ -6,80 +6,12 @@
 <title>LEGAM | My Profile</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-  font-family:'Poppins', sans-serif;
-  background:#000;
-  color:white;
-  overflow-x:hidden;
-}
-body::before{
-  content:"";
-  position:fixed;
-  width:200%;height:200%;
-  background:linear-gradient(45deg,#ff9800,#ff0066,#00f0ff,#ff9800);
-  background-size:400% 400%;
-  animation:gradient 12s ease infinite;
-  opacity:0.08;z-index:-2;
-}
-@keyframes gradient{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-.container{display:flex;justify-content:center;align-items:center;flex-direction:column;padding:60px 20px;}
-.card{
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(25px);
-  border-radius:30px;
-  padding:45px;
-  width:95%;max-width:450px;
-  text-align:center;
-  box-shadow:0 0 60px rgba(255,152,0,0.4);
-}
-.profile-img{
-  width:150px;height:150px;border-radius:50%;
-  object-fit:cover;border:5px solid #ff9800;
-  box-shadow:0 0 40px #ff9800;transition:0.4s;
-}
-.profile-img:hover{transform:scale(1.1) rotate(5deg);box-shadow:0 0 80px #ff9800;}
-h1{
-  font-family:'Orbitron', sans-serif;
-  margin-top:20px;font-size:28px;letter-spacing:4px;
-  text-shadow:0 0 20px #ff9800;
-}
-/* TYPING */
-.typing{
-  font-size:14px;color:#ccc;
-  white-space:nowrap;overflow:hidden;
-  min-height:20px;
-}
-/* BUTTON */
-.btn{
-  display:block;margin:14px auto;padding:14px;
-  border-radius:18px;text-decoration:none;
-  font-weight:500;transition:0.3s;
-  width:92%;text-align:center;font-size:15px;
-}
-.instagram{background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af,#515bd4);color:white;}
-.tiktok{background:#111;border:1px solid #fff;color:white;}
-.sociabuzz{background:#ff9800;color:white;}
-.btn:hover{transform:scale(1.07);box-shadow:0 0 30px rgba(255,255,255,0.4);}
-footer{margin-top:25px;font-size:12px;color:#888;}
-@media(max-width:600px){
-  h1{font-size:22px;}
-  .profile-img{width:120px;height:120px;}
-}
-/* MUSIC PLAYER */
-.music-player{margin-top:20px;}
-#spectrum{background:#111;border-radius:10px;margin-top:10px;}
-#volume{width:100%;margin-top:10px;}
-</style>
 </head>
 
 <body>
+
 <div class="container">
 <div class="card">
 
@@ -92,73 +24,26 @@ footer{margin-top:25px;font-size:12px;color:#888;}
 <a href="https://www.tiktok.com/@legamtwoo" target="_blank" class="btn tiktok">🎵 TikTok 🎵</a>
 <a href="https://sociabuzz.com/remboww59" target="_blank" class="btn sociabuzz">☕ Sociabuzz ☕</a>
 
-<!-- MUSIC PLAYER -->
 <div class="music-player">
-  <h3 id="song-title">🎵 Judul Lagu: My Song</h3>
-  <button id="play-btn">▶ Play</button>
-  <button id="stop-btn">⏸ Stop</button>
-  <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
-  <canvas id="spectrum" width="300" height="100"></canvas>
+<h3 id="song-title">🎵 Judul Lagu: My Song</h3>
+
+<button id="play-btn">▶ Play</button>
+<button id="stop-btn">⏸ Stop</button>
+
+<input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
+
+<canvas id="spectrum" width="300" height="100"></canvas>
+
 </div>
 
-<!-- Audio element -->
 <audio id="bg-music" src="song.mp3"></audio>
 
 <footer>© 2026 LEGAM • My Profile</footer>
+
 </div>
 </div>
 
-<script>
-// teks bergantian
-const texts = ["Content Creator","Gamers","Streamer"];
-let i=0;
-function typeText(text, element){
-  element.textContent="";let j=0;
-  let typing=setInterval(()=>{
-    element.textContent+=text[j];j++;
-    if(j===text.length){clearInterval(typing);}
-  },100);
-}
-function loopTyping(){
-  const el=document.getElementById("typing");
-  typeText(texts[i],el);i=(i+1)%texts.length;
-}
-setInterval(loopTyping,3000);loopTyping();
-
-// music player
-const audio=document.getElementById("bg-music");
-const playBtn=document.getElementById("play-btn");
-const stopBtn=document.getElementById("stop-btn");
-const volumeSlider=document.getElementById("volume");
-
-playBtn.addEventListener("click",()=>{audio.play();});
-stopBtn.addEventListener("click",()=>{audio.pause();audio.currentTime=0;});
-volumeSlider.addEventListener("input",()=>{audio.volume=volumeSlider.value;});
-
-// spectrum visualizer
-const canvas=document.getElementById("spectrum");
-const ctx=canvas.getContext("2d");
-const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-const source=audioCtx.createMediaElementSource(audio);
-const analyser=audioCtx.createAnalyser();
-source.connect(analyser);analyser.connect(audioCtx.destination);
-function drawSpectrum(){
-  requestAnimationFrame(drawSpectrum);
-  const bufferLength=analyser.frequencyBinCount;
-  const dataArray=new Uint8Array(bufferLength);
-  analyser.getByteFrequencyData(dataArray);
-  ctx.fillStyle="#000";ctx.fillRect(0,0,canvas.width,canvas.height);
-  const barWidth=(canvas.width/bufferLength)*2.5;let x=0;
-  for(let i=0;i<bufferLength;i++){
-    const barHeight=dataArray[i]/2;
-    ctx.fillStyle="#ff9800";
-    ctx.fillRect(x,canvas.height-barHeight,barWidth,barHeight);
-    x+=barWidth+1;
-  }
-}
-drawSpectrum();
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
-
